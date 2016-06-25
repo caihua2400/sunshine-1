@@ -21,10 +21,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import java.util.List;
 
 /**
@@ -38,7 +34,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener{
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -90,11 +86,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             return true;
         }
     };
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     /**
      * Helper method to determine if the device has an extra-large screen. For
@@ -116,7 +107,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
      */
     private static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(this);
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
@@ -130,10 +121,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
 
 
     @Override
@@ -178,47 +170,22 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        return false;
-    }
+        String stringValue = newValue.toString();
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Settings Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.android.sunshine.app/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Settings Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.android.sunshine.app/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        if (preference instanceof ListPreference) {
+            // For list preferences, look up the correct display value in
+            // the preference's 'entries' list (since they have separate labels/values).
+            ListPreference listPreference = (ListPreference) preference;
+            int prefIndex = listPreference.findIndexOfValue(stringValue);
+            if (prefIndex >= 0) {
+                preference.setSummary(listPreference.getEntries()[prefIndex]);
+            }
+        } else {
+            // For other preferences, set the summary to the value's simple string representation.
+            preference.setSummary(stringValue);
+        }
+        return true;
+        
     }
 
     /**
