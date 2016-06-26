@@ -288,13 +288,7 @@ public  class ForecastFragment extends Fragment {
             task.execute("94043");
             return true;
         }
-        else if(item.getItemId()==R.id.action_settings){
-            Log.i("Forecast"," work please!");
-            Intent intent=new Intent(getActivity(),SettingsActivity.class);
-           // Log.i("Forecast"," work please!");
-            startActivity(intent);
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
     /* The date/time conversion code is going to be moved outside the asynctask later,
