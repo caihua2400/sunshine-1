@@ -53,6 +53,9 @@
         <item>360</item>
         <item>-1</item>
     </string-array>
+    <string name="default_temperature">metric</string>
+    <string name="pref_temperature_key">pref_temperature_key</string>
+    <string name="pref_temperature_title">temperature format options</string>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 

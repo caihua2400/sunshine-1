@@ -195,7 +195,7 @@ public  class ForecastFragment extends Fragment {
                                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                                                 .appendQueryParameter(QUERY_PARAM, params[0])
                                                 .appendQueryParameter(FORMAT_PARAM, format)
-                                               .appendQueryParameter(UNITS_PARAM, units)
+                                               .appendQueryParameter(UNITS_PARAM, params[1])
                                                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
                                                 .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                                                .build();
@@ -265,8 +265,8 @@ public  class ForecastFragment extends Fragment {
       public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ArrayList weatherList=new ArrayList<String>(Arrays.asList(weather));
-        adapter=new ArrayAdapter(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,weatherList);
+        //ArrayList weatherList=new ArrayList<String>(Arrays.asList(weather));
+        adapter=new ArrayAdapter(getActivity(),R.layout.list_item_forecast,R.id.list_item_forecast_textview,new ArrayList<String>());
         ListView listView=(ListView)rootView.findViewById(R.id.ListView_forecast);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -281,20 +281,28 @@ public  class ForecastFragment extends Fragment {
 
         return rootView;
     }
+    private void updateWeather(){
+        FetchWeatherTask task=new FetchWeatherTask();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        String temperatureFormat=prefs.getString(getString(R.string.pref_temperature_key),getString(R.string.default_temperature));
+        Log.i("Temperature format:",temperatureFormat);
+        task.execute(location,temperatureFormat);
+    }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+        updateWeather();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.action_refresh){
-            FetchWeatherTask task=new FetchWeatherTask();
-            //SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
-            //String locationPreference=preferences.getString(SettingsActivity.class.,);
-
-            //task.execute("94043");
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String location = prefs.getString(getString(R.string.pref_location_key),
-                    getString(R.string.pref_location_default));
-            task.execute(location);
+            updateWeather();
             return true;
         }
 
