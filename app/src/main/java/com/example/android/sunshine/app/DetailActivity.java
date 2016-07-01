@@ -3,12 +3,16 @@ package com.example.android.sunshine.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
@@ -51,8 +55,35 @@ public class DetailActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class DetailFragment extends Fragment {
+        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+        private String mForecastStr;
+        private ShareActionProvider mShareActionProvider;
+        private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
 
         public DetailFragment() {
+            setHasOptionsMenu(true);
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+            super.onCreateOptionsMenu(menu, inflater);
+            inflater.inflate(R.menu.detailfragment,menu);
+            MenuItem menuItem=menu.findItem(R.id.menu_item_share);
+            ShareActionProvider mShareActionProvider= (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+            if(mShareActionProvider!=null){
+                mShareActionProvider.setShareIntent(createShareForeCastIntent());
+            }else{
+                Log.d(LOG_TAG, "Share Action Provider is null?");
+            }
+        }
+        private Intent createShareForeCastIntent(){
+            Intent shareIntent=new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT,mForecastStr+FORECAST_SHARE_HASHTAG);
+            return shareIntent;
+
         }
 
         @Override
@@ -63,9 +94,9 @@ public class DetailActivity extends ActionBarActivity {
 
             Intent intent=getActivity().getIntent();
             if(intent!=null&&intent.hasExtra(Intent.EXTRA_TEXT)){
-                String message=intent.getStringExtra(Intent.EXTRA_TEXT);
+                mForecastStr=intent.getStringExtra(Intent.EXTRA_TEXT);
                 TextView textView=(TextView)rootView.findViewById(R.id.t1);
-                textView.setText(message);
+                textView.setText(mForecastStr);
             }
             return rootView;
         }

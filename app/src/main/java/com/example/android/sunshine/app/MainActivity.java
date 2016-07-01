@@ -52,7 +52,9 @@ public class MainActivity extends ActionBarActivity {
         String location=preferences.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
         Uri geoLocation=Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q",location).build();
         Intent intent=new Intent(Intent.ACTION_VIEW);
+
         intent.setData(geoLocation);
+        Log.i(LOG_TAG,geoLocation.toString());
         if(intent.resolveActivity(getPackageManager())!=null){
              startActivity(intent);
 
