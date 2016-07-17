@@ -127,7 +127,7 @@ public class TestProvider extends AndroidTestCase {
 
             // Make sure that the registered authority matches the authority from the Contract.
             assertEquals("Error: WeatherProvider registered with authority: " + providerInfo.authority +
-                    " instead of authority: " + WeatherContract.CONTENT_AUTHORITY,
+                            " instead of authority: " + WeatherContract.CONTENT_AUTHORITY,
                     providerInfo.authority, WeatherContract.CONTENT_AUTHORITY);
         } catch (PackageManager.NameNotFoundException e) {
             // I guess the provider isn't registered correctly.
@@ -178,56 +178,56 @@ public class TestProvider extends AndroidTestCase {
         read out the data.  Uncomment this test to see if the basic weather query functionality
         given in the ContentProvider is working correctly.
      */
-//    public void testBasicWeatherQuery() {
-//        // insert our test records into the database
-//        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//
-//        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-//        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
-//
-//        // Fantastic.  Now that we have a location, add some weather!
-//        ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
-//
-//        long weatherRowId = db.insert(WeatherEntry.TABLE_NAME, null, weatherValues);
-//        assertTrue("Unable to Insert WeatherEntry into the Database", weatherRowId != -1);
-//
-//        db.close();
-//
-//        // Test the basic content provider query
-//        Cursor weatherCursor = mContext.getContentResolver().query(
-//                WeatherEntry.CONTENT_URI,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
-//
-//        // Make sure we get the correct cursor out of the database
-//        TestUtilities.validateCursor("testBasicWeatherQuery", weatherCursor, weatherValues);
-//    }
+    public void testBasicWeatherQuery() {
+        // insert our test records into the database
+        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
+        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
+
+        // Fantastic.  Now that we have a location, add some weather!
+        ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
+
+        long weatherRowId = db.insert(WeatherEntry.TABLE_NAME, null, weatherValues);
+        assertTrue("Unable to Insert WeatherEntry into the Database", weatherRowId != -1);
+
+        db.close();
+
+        // Test the basic content provider query
+        Cursor weatherCursor = mContext.getContentResolver().query(
+                WeatherEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // Make sure we get the correct cursor out of the database
+        TestUtilities.validateCursor("testBasicWeatherQuery", weatherCursor, weatherValues);
+    }
 
     /*
         This test uses the database directly to insert and then uses the ContentProvider to
         read out the data.  Uncomment this test to see if your location queries are
         performing correctly.
      */
-//    public void testBasicLocationQueries() {
-//        // insert our test records into the database
-//        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//
-//        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-//        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
-//
-//        // Test the basic content provider query
-//        Cursor locationCursor = mContext.getContentResolver().query(
-//                LocationEntry.CONTENT_URI,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
+    public void testBasicLocationQueries() {
+        // insert our test records into the database
+        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
+        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
+
+        // Test the basic content provider query
+        Cursor locationCursor = mContext.getContentResolver().query(
+                LocationEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
 //
 //        // Make sure we get the correct cursor out of the database
 //        TestUtilities.validateCursor("testBasicLocationQueries, location query", locationCursor, testValues);
@@ -297,11 +297,11 @@ public class TestProvider extends AndroidTestCase {
 //    }
 
 
-    // Make sure we can still delete after adding/updating stuff
-    //
-    // Student: Uncomment this test after you have completed writing the insert functionality
-    // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
-    // query functionality must also be complete before this test can be used.
+        // Make sure we can still delete after adding/updating stuff
+        //
+        // Student: Uncomment this test after you have completed writing the insert functionality
+        // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
+        // query functionality must also be complete before this test can be used.
 //    public void testInsertReadProvider() {
 //        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
 //
@@ -403,11 +403,11 @@ public class TestProvider extends AndroidTestCase {
 //                weatherCursor, weatherValues);
 //    }
 
-    // Make sure we can still delete after adding/updating stuff
-    //
-    // Student: Uncomment this test after you have completed writing the delete functionality
-    // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
-    // query functionality must also be complete before this test can be used.
+        // Make sure we can still delete after adding/updating stuff
+        //
+        // Student: Uncomment this test after you have completed writing the delete functionality
+        // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
+        // query functionality must also be complete before this test can be used.
 //    public void testDeleteRecords() {
 //        testInsertReadProvider();
 //
@@ -432,7 +432,7 @@ public class TestProvider extends AndroidTestCase {
 //    }
 
 
-    static private final int BULK_INSERT_RECORDS_TO_INSERT = 10;
+   /* static private final int BULK_INSERT_RECORDS_TO_INSERT = 10;
     static ContentValues[] createBulkInsertWeatherValues(long locationRowId) {
         long currentTestDate = TestUtilities.TEST_DATE;
         long millisecondsInADay = 1000*60*60*24;
@@ -453,12 +453,12 @@ public class TestProvider extends AndroidTestCase {
             returnContentValues[i] = weatherValues;
         }
         return returnContentValues;
-    }
+    }*/
 
-    // Student: Uncomment this test after you have completed writing the BulkInsert functionality
-    // in your provider.  Note that this test will work with the built-in (default) provider
-    // implementation, which just inserts records one-at-a-time, so really do implement the
-    // BulkInsert ContentProvider function.
+        // Student: Uncomment this test after you have completed writing the BulkInsert functionality
+        // in your provider.  Note that this test will work with the built-in (default) provider
+        // implementation, which just inserts records one-at-a-time, so really do implement the
+        // BulkInsert ContentProvider function.
 //    public void testBulkInsert() {
 //        // first, let's create a location value
 //        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
@@ -522,4 +522,5 @@ public class TestProvider extends AndroidTestCase {
 //        }
 //        cursor.close();
 //    }
+    }
 }
