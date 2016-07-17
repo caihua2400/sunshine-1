@@ -250,6 +250,22 @@ public class WeatherProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Student: Start by getting a writable database
+        final SQLiteDatabase db=mOpenHelper.getWritableDatabase();
+        int match=sUriMatcher.match(uri);
+        int rowsDeleted;
+        switch (match){
+            case WEATHER:
+                rowsDeleted=db.delete(WeatherContract.WeatherEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            case LOCATION:
+                rowsDeleted=db.delete(WeatherContract.LocationEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if(rowsDeleted!=0){
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
 
         // Student: Use the uriMatcher to match the WEATHER and LOCATION URI's we are going to
         // handle.  If it doesn't match these, throw an UnsupportedOperationException.
@@ -260,7 +276,7 @@ public class WeatherProvider extends ContentProvider {
         // Oh, and you should notify the listeners here.
 
         // Student: return the actual rows deleted
-        return 0;
+        return rowsDeleted;
     }
 
     private void normalizeDate(ContentValues values) {
@@ -274,9 +290,30 @@ public class WeatherProvider extends ContentProvider {
     @Override
     public int update(
             Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        final SQLiteDatabase db=mOpenHelper.getWritableDatabase();
+        int match=sUriMatcher.match(uri);
+        int rowsUpdated;
+        switch(match){
+            case WEATHER:
+                normalizeDate(values);
+                rowsUpdated=db.update(WeatherContract.WeatherEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            case LOCATION:
+                rowsUpdated=db.update(WeatherContract.LocationEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+
+        }
+        if(rowsUpdated!=0){
+          getContext().getContentResolver().notifyChange(uri,null);
+
+        }
+
         // Student: This is a lot like the delete function.  We return the number of rows impacted
         // by the update.
-        return 0;
+        return rowsUpdated;
     }
 
     @Override
