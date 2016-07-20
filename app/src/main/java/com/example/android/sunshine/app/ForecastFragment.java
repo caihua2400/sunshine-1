@@ -128,5 +128,5 @@ public class ForecastFragment extends Fragment {
         updateWeather();
     }
 
-    
+
 }
