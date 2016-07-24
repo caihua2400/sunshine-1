@@ -13,8 +13,12 @@ import com.example.android.sunshine.app.data.WeatherContract;
  * Created by caihua2300 on 22/07/2016.
  */
 public class ForecastAdapter extends CursorAdapter {
+    private Context mContext;
     public ForecastAdapter(Context context, Cursor c, int flags) {
+
+
         super(context, c, flags);
+        mContext=context;
     }
 
     /**
