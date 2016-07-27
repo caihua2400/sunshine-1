@@ -58,7 +58,7 @@ import java.util.StringTokenizer;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks{
+public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final int FORECAST_LOADER = 0;
 
     private ForecastAdapter mForecastAdapter;
@@ -147,9 +147,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
     }
+
+
 
     @Override
     public void onLoaderReset(Loader loader) {
