@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.TextView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 
@@ -42,11 +43,11 @@ public class ForecastAdapter extends CursorAdapter {
         int idx_short_desc = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC);
 
         String highAndLow = formatHighLows(
-                cursor.getDouble(idx_max_temp),
-                cursor.getDouble(idx_min_temp));
+                cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP),
+                cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP));
 
-        return Utility.formatDate(cursor.getLong(idx_date)) +
-                " - " + cursor.getString(idx_short_desc) +
+        return Utility.formatDate(cursor.getLong(ForecastFragment.COL_WEATHER_DATE)) +
+                                " - " + cursor.getString(ForecastFragment.COL_WEATHER_DESC) +
                 " - " + highAndLow;
     }
     @Override
@@ -54,9 +55,15 @@ public class ForecastAdapter extends CursorAdapter {
         View view= LayoutInflater.from(context).inflate(R.layout.list_item_forecast,parent,false);
         return view;
     }
+    /*
+        This is where we fill-in the views with the contents of the cursor.
+    */
+
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        TextView tv = (TextView)view;
+        tv.setText(convertCursorRowToUXFormat(cursor));
 
 
     }
