@@ -118,6 +118,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
         return super.onOptionsItemSelected(item);
     }
+    // since we read the location when we create the loader, all we need to do is restart things
+        void onLocationChanged( ) {
+                updateWeather();
+                getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,11 +169,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
        fetchWeatherTask.execute(location);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateWeather();
-    }
+
 
 
     @Override
