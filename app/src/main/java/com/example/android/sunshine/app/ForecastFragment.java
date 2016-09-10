@@ -123,6 +123,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 updateWeather();
                 getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
         }
+    public interface CallBack{
+        public void OnItemSelected(Uri dateUri);
+
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,8 +153,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                Cursor cursor=(Cursor) parent.getItemAtPosition(position);
                if(cursor!=null){
                    String locationSetting=Utility.getPreferredLocation(getActivity());
-                   Intent intent=new Intent(getActivity(),DetailActivity.class).setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,cursor.getLong(COL_WEATHER_DATE)));
-                   startActivity(intent);
+                   //Intent intent=new Intent(getActivity(),DetailActivity.class).setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,cursor.getLong(COL_WEATHER_DATE)));
+                   ((CallBack)getActivity()).OnItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting,cursor.getLong(COL_WEATHER_DATE)));
+                   //startActivity(intent);
                }
            }
        });
